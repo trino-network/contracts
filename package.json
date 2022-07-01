@@ -15,6 +15,6 @@
     "sol-merger": "^4.1.1"
   },
   "scripts": {
-    "build-contracts": "sol-merger \"./contracts/*.sol\" ./build"
+    "build-contracts": "sol-merger \"./contracts/*.sol\" ./goabi"
   }
 }
