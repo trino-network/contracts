@@ -12,7 +12,7 @@ contract TrinoPayment is Initializable , PausableUpgradeable, AccessControlUpgra
     mapping(string => uint256) public orders;
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
-    event Pay(string trade_no, uint256 amount);
+    event Pay(string invoice_id, address recipient, uint256 amount);
     event Withdraw(address recipient, uint256 amount);
 
     function initialize(address _token) public initializer {
@@ -22,10 +22,11 @@ contract TrinoPayment is Initializable , PausableUpgradeable, AccessControlUpgra
     }
 
 
-    function pay(string calldata trade_no, uint256 amount) public whenNotPaused {
-        require(token.transferFrom(msg.sender, address(this), amount), "transfer failed");
-        orders[trade_no] = amount;
-        emit Pay(trade_no, amount);
+    function pay(string calldata invoice_id, address recipient, uint256 amount) public whenNotPaused {
+        require(recipient != address(0), "recipient can't be zero address");
+        require(token.transferFrom(msg.sender, recipient, amount), "transfer failed");
+        orders[invoice_id] = amount;
+        emit Pay(invoice_id, recipient, amount);
     }
 
     function withdraw(address recipient) public onlyRole(DEFAULT_ADMIN_ROLE)  {
